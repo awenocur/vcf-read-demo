@@ -1,6 +1,11 @@
 #include "vcf-util.hpp"
 #include <htslib/hts.h>
 
+static void check_condition(bool condition, const char* message)
+{
+  if(!condition) throw std::runtime_error(message);
+}
+
 class HTSLibOutputBuffer
 {
   int32_t *data = NULL;
@@ -29,8 +34,10 @@ void VCFFile::open(std::filesystem::path path)
       bcf_hdr_destroy(header);
     }
   content = hts_open(&static_cast<std::string>(path)[0], "r");
-  assert(content != NULL);
+  constexpr const char *message = "VCF file may be invalid";
+  check_condition(content != NULL, message);
   header = bcf_hdr_read(content);
+  check_condition(header != NULL, message);
 }
 
 VCFFile::VCFFile():content(NULL), header(NULL)
@@ -60,7 +67,7 @@ Variant VCFFile::computeRow()
   unsigned int het = 0;
   for(unsigned int i = 0; i < numSamples; i++)
     {
-      assert(genotypeCardinality == 2*numSamples);
+      check_condition(genotypeCardinality == 2*numSamples, "VCF may not be diploid, or an error occurred finding GT annotatins");
       unsigned int allele1 = bcf_gt_allele(genotypeArray[2*i]);
       unsigned int allele2 = bcf_gt_allele(genotypeArray[2*i+1]);
       if(bcf_gt_is_missing(genotypeArray[2*i]) || bcf_gt_is_missing(genotypeArray[2*i+1]))

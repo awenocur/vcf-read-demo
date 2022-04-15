@@ -27,11 +27,17 @@ int main(int argc, const char** argv)
     }
   
   VCFFile fileToCheck;
-  fileToCheck.open(inputPath);
-  output << "CHROM\tPOS\tMISSING\tHOMREF\tHOMALT\tHET\n";
-  for(auto variant: fileToCheck)
-    {
-      output << variant.chr << "\t" << variant.pos << "\t" << variant.missing << "\t" << variant.homref << "\t" << variant.homalt << "\t" << variant.het << "\n";
-    }
+  try {
+    fileToCheck.open(inputPath);
+    output << "CHROM\tPOS\tMISSING\tHOMREF\tHOMALT\tHET\n";
+    for(auto variant: fileToCheck)
+      output << variant.chr << "\t" <<
+	variant.pos << "\t" <<
+	variant.missing << "\t" <<
+	variant.homref << "\t" <<
+	variant.homalt << "\t" <<
+	variant.het << "\n";}
+  catch(const std::exception &e) {
+    cerr << "an error occurred: " << e.what() << "\n";}
   return 0;
 }
