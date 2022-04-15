@@ -71,9 +71,9 @@ Variant VCFFile::computeRow()
       unsigned int allele1 = bcf_gt_allele(genotypeArray[2*i]);
       unsigned int allele2 = bcf_gt_allele(genotypeArray[2*i+1]);
       if(bcf_gt_is_missing(genotypeArray[2*i]) || bcf_gt_is_missing(genotypeArray[2*i+1]))
-	missing++;
+        missing++;
       else
-	if(allele1 != allele2) het++;
+        if(allele1 != allele2) het++;
       else if(allele1 == 0) homref++;
       else homalt++;
     }
