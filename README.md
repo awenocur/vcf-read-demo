@@ -7,4 +7,5 @@ This has been tested using GCC 11 on GNU/Linux. Simply build using the Makefile:
 ```
 cd vcf-read-demo
 make
+./demo <input VCF path> <output TSV path>
 ```
