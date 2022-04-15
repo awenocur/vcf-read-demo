@@ -51,7 +51,7 @@ Variant VCFFile::computeRow()
       else if(allele1 == 0) homref++;
       else homalt++;
     }
-  return Variant(bcf_hdr_id2name(header, row->rid), row->pos, homref, homalt, het, missing);
+  return Variant(bcf_hdr_id2name(header, row->rid), row->pos + 1, homref, homalt, het, missing);
 }
 
 int VCFFile::read()
