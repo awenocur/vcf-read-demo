@@ -1,6 +1,24 @@
 #include "vcf-util.hpp"
 #include <htslib/hts.h>
 
+class HTSLibOutputBuffer
+{
+  int32_t *data = 0;
+public:
+  int32_t **operator &()
+  {
+    return &data;
+  }
+  int32_t &operator [](size_t subscript)
+  {
+    return data[subscript];
+  }
+  ~HTSLibOutputBuffer()
+  {
+    if(data != NULL) free(data);
+  }
+};
+
 void VCFFile::open(std::filesystem::path path)
 {
   done = false;
@@ -34,7 +52,7 @@ Variant VCFFile::computeRow()
   bcf_unpack(row, BCF_UN_ALL);
 
   uint32_t numSamples = bcf_hdr_nsamples(header);
-  int32_t *genotypeArray = NULL;
+  HTSLibOutputBuffer genotypeArray;
   int32_t genotypeCardinality = 0;
   bcf_get_genotypes(header, row, &genotypeArray, &genotypeCardinality);
   unsigned int homref = 0, homalt = 0, missing = 0;
