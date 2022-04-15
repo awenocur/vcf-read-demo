@@ -3,7 +3,7 @@
 
 class HTSLibOutputBuffer
 {
-  int32_t *data = 0;
+  int32_t *data = NULL;
 public:
   int32_t **operator &()
   {
@@ -29,6 +29,7 @@ void VCFFile::open(std::filesystem::path path)
       bcf_hdr_destroy(header);
     }
   content = hts_open(&static_cast<std::string>(path)[0], "r");
+  assert(content != NULL);
   header = bcf_hdr_read(content);
 }
 
