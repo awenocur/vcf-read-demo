@@ -65,9 +65,9 @@ Variant VCFFile::computeRow()
   bcf_get_genotypes(header, row, &genotypeArray, &genotypeCardinality);
   unsigned int homref = 0, homalt = 0, missing = 0;
   unsigned int het = 0;
+  check_condition(genotypeCardinality == 2*numSamples, "VCF may not be diploid, or an error occurred finding GT annotatins");
   for(unsigned int i = 0; i < numSamples; i++)
     {
-      check_condition(genotypeCardinality == 2*numSamples, "VCF may not be diploid, or an error occurred finding GT annotatins");
       unsigned int allele1 = bcf_gt_allele(genotypeArray[2*i]);
       unsigned int allele2 = bcf_gt_allele(genotypeArray[2*i+1]);
       if(bcf_gt_is_missing(genotypeArray[2*i]) || bcf_gt_is_missing(genotypeArray[2*i+1]))
